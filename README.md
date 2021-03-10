@@ -10,7 +10,7 @@ The is well protected from SQL injection and malicious data, and wrong data. It 
 
 **How to run**
 - install node js, composer, xampp, and laravel. Ignore if you already have it.
-- Pull this git project, or if you already have this project the use it
+- Pull this git project from master branch, or if you already have this project the use it
 - run npm install for laravel mix
 - "run npm run dev" command for tailwind css
 - create a database name in MySQL or MariaDB or any SQL server in xampp. 
