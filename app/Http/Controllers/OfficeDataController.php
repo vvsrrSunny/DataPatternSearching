@@ -63,7 +63,7 @@ class OfficeDataController extends Controller
             abort(400, 'bad request negitive values');
         }
 
-        if($sqmMax<$sqmMin || $priceMax<$priceMin)
+        if(($sqmMax<$sqmMin && $sqmMax!= null) || ($priceMax<$priceMin && $priceMax!= null))
         abort(400, 'bad request range not acceptable');
 
 
