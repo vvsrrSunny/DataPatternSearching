@@ -10,6 +10,7 @@
    </head>
    <body  class="bg-gray-300">
       <!-- This example requires Tailwind CSS v2.0+ -->
+      <!-- nav bar code pulled from internet tailwind css -->
       <nav class="bg-gray-800">
          <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
             <div class="relative flex items-center justify-between h-16">
@@ -69,16 +70,7 @@
                         <span class="sr-only">Open user menu</span>
                         </button>
                      </div>
-                     <!--
-                        Dropdown menu, show/hide based on menu state.
-                        
-                        Entering: "transition ease-out duration-100"
-                          From: "transform opacity-0 scale-95"
-                          To: "transform opacity-100 scale-100"
-                        Leaving: "transition ease-in duration-75"
-                          From: "transform opacity-100 scale-100"
-                          To: "transform opacity-0 scale-95"
-                        -->
+                    
                   </div>
                </div>
             </div>
@@ -95,6 +87,8 @@
          </div>
       </nav>
       <br>
+
+      <!-- Form provided to the user to enter the details -->
       <div class = "ml-10">
          <form>
             <div class="w-1/3 col-span-6 sm:col-span-3">
@@ -133,6 +127,7 @@
          </div>
       </center>
       <!-- component -->
+      <!-- This is a table component, successfully returned records are presented here -->
       <div class="container" >
          <!-- This example requires Tailwind CSS v2.0+ -->
          <div class="flex flex-col">
@@ -188,20 +183,30 @@
                </div>
             </div>
          </div>
+         <!-- Wrong user inputs or error send by server is provided here by deleting table and showing this p tag else
+        p tag is hidden -->
          <center>
             <p id="demo" class="text-red-900 text-opacity-100"></p>
          </center>
       </div>
       <script>
+    
+    // Js code to caputer when enter is pressed by the user
       $("input").on('keyup', function(e) {
     if (e.key === 'Enter' || e.keyCode === 13) {
-        // Do something
-        triggerForOfficeDataCall();
+        // 
+       // check for the validity of the user inputs
+        triggerForOfficeDataCallSOCheckInputs();
 
     }
 });
 
-function triggerForOfficeDataCall() {
+// check for the validity of the user inputs 
+// if correct call the triggerForOfficeData function for making  ajax call
+// else instead of forwarding the inputs for ajax call it will stop at the user to make user correct his input 
+function triggerForOfficeDataCallSOCheckInputs() {
+
+
     console.log("I am called");
     var name = $("#name").val().trim();
     if (name == "")
@@ -231,6 +236,7 @@ function triggerForOfficeDataCall() {
     if (sqmMax == "")
         sqmMax = null;
 
+        // range issues
     if (sqmMax < sqmMin && sqmMax != null) {
         handleWrongInputs("Please provide a valid range for square meters")
         return;
@@ -244,19 +250,25 @@ function triggerForOfficeDataCall() {
     if (priceMax == "")
         priceMax = null;
 
+        // range issues
     if (priceMax < priceMin && priceMax != null) {
         handleWrongInputs("Please provide a valid range for Price")
         return;
     }
+
+    // if negitive values were provided
     if (offices < 0 || tables < 0 || sqmMin < 0 || sqmMax < 0 || priceMin < 0 || priceMax < 0) {
         handleWrongInputs("Negative value were provided, they are not valid.")
         return;
     }
+
+    // handling all empty inputs
     if (name == null && offices == null && tables == null && sqmMin == null && sqmMax == null && priceMin == null && priceMax == null) {
         handleWrongInputs("Please provide some inputs")
         return;
     }
 
+    // filter was success, data is clear and can be made to ajax call, so preparing json object for the call
     requestJsonObject = {
         "name": name,
         "offices": offices,
@@ -266,24 +278,14 @@ function triggerForOfficeDataCall() {
         "priceMin": priceMin,
         "priceMax": priceMax
     };
-    console.log("hii");
-    //        var xhttp = new XMLHttpRequest();
-    //  xhttp.onreadystatechange = function() {
-    //    if (this.readyState == 4 && this.status == 200) {
-    //     let resultJsonArray =  this.responseText;
-    //         $("#tbodyId tr").remove();
-    //         resultJsonArray = JSON.parse(resultJsonArray);
-    //         successFunction(resultJsonArray);
 
+    triggerForOfficeDataCall(requestJsonObject)
+}
 
-
-    //    }
-    //  };
-
-    //  xhttp.open("POST", "/officedata", true);
-    //  xhttp.setRequestHeader("Content-type", "application/json");
-    //  xhttp.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}"); 
-    //  xhttp.send(JSON.stringify(requestJsonObject));
+// this function makes ajax call 
+function triggerForOfficeDataCall(requestJsonObject) {
+    
+    
     $.ajax('/officedata', {
         type: 'POST', // http method
         headers: {
@@ -312,21 +314,26 @@ function triggerForOfficeDataCall() {
     });
 }
 
+// helper function to show error messages to the users
 function handleWrongInputs(message) {
     $("#tbodyId tr").remove();
     $("#demo").text(message);
 }
 
+// This function is called when search request is successful
 function successFunction(resultJsonArray) {
     $("#tbodyId tr").remove();
     console.log(resultJsonArray)
     //resultJsonArray = JSON.parse(resultJsonArray);
+    // if no records were returned
     if (resultJsonArray.length === 0)
         $("#demo").text("No records found with the given inputs");
     else
         $("#demo").text("");
+        // records were writtened, so iterating the table and dynamically freating the table.
     $.each(resultJsonArray, function(i, resultJson) {
-        //get the corrsponding email
+        //
+        // these are the class name for tail wind css styling 
         var nameAndSqmTdClassName = "\"px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900\"";
         var priceTdClassName = "\"px-6 py-4 whitespace-nowrap text-sm text-gray-500\"";
         var officeAndTableTdClassName = "\"px-6 py-4 whitespace-nowrap\"";

@@ -35,7 +35,8 @@ class OfficeData extends Model
         $priceMax = $request->input('priceMax');
         $query = OfficeData::query();
 
-        
+        // Sql injecting are handled by laravel if we use laravel query builder, well -> where is a 
+        // laravel query bulder, so, fram work will handle that. 
         if($name != null)
         $query = $query->where('name', 'like', $name.'%');
         if($tables != null)
